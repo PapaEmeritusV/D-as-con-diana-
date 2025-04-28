@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Días con el amor de mi vida: Diana Jeannette</title>
+  <style>
+    /* Reinicio global */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fffde7, #ffecb3);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      overflow-x: hidden;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #d32f2f;
+      text-shadow: 2px 2px 3px rgba(255,255,255,0.7);
+      margin-bottom: 10px;
+    }
+
+    #contador {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    #mensaje {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #bf1650;
+      margin-bottom: 30px;
+    }
+
+    /* Contenedor del árbol */
+    #tree-container {
+      position: relative;
+      width: 300px;
+      height: 450px;
+      margin: 0 auto 30px;
+    }
+
+    /* El SVG del árbol ocupará todo el contenedor */
+    #tree-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Animación para que el tronco brote de la tierra */
+    @keyframes sprout {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+    /* Se animará con CSS y se establece el punto de origen en la base del tronco */
+    #tree-trunk {
+      transform-origin: 150px 430px; /* Base del tronco: centro X del SVG y justo encima del suelo */
+      animation: sprout 3s ease-out forwards;
+    }
+
+    /* Animación de caída para los corazones (hojas) */
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(350px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0;
+      animation: fall linear forwards;
+    }
+  </style>
+</head>
+<body>
+  <!-- Título y mensaje -->
+  <h1>Días con el amor de mi vida: Diana Jeannette</h1>
+  <div id="contador"></div>
+  <div id="mensaje">Cada momento que paso contigo es donde quiero estar.</div>
+
+  <!-- Contenedor del árbol -->
+  <div id="tree-container">
+    <svg id="tree-svg" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradiente para el tronco -->
+        <linearGradient id="trunkGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8B4513" />
+          <stop offset="100%" stop-color="#5D2E0D" />
+        </linearGradient>
+        <!-- Gradiente para la copa en tonos románticos -->
+        <radialGradient id="canopyGradient" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff80ab" />
+          <stop offset="100%" stop-color="#c2185b" />
+        </radialGradient>
+      </defs>
+      <!-- Suelo: una elipse que simula la tierra -->
+      <ellipse cx="150" cy="430" rx="180" ry="25" fill="#4CAF50" opacity="0.85" />
+      <!-- Tronco: se anima para "brotar" desde la tierra -->
+      <path id="tree-trunk" d="M150,430 Q140,370,150,260 Q160,370,150,430" fill="url(#trunkGradient)" />
+      <!-- Copa del árbol: compuesta de círculos superpuestos -->
+      <circle cx="150" cy="220" r="90" fill="url(#canopyGradient)" opacity="0.95" />
+      <circle cx="100" cy="260" r="70" fill="url(#canopyGradient)" opacity="0.9" />
+      <circle cx="200" cy="260" r="70" fill="url(#canopyGradient)" opacity="0.9" />
+      <circle cx="150" cy="170" r="60" fill="url(#canopyGradient)" opacity="0.92" />
+    </svg>
+    <!-- Contenedor para los corazones (hojas) en caída -->
+    <div id="hearts"></div>
+  </div>
+
+  <script>
+    // Función para actualizar el contador en tiempo real
+    function actualizarContador() {
+      // La fecha de inicio: 27 de junio de 2022 (recuerda que en JS, enero es el mes 0)
+      const fechaInicio = new Date(2022, 5, 27);
+      const ahora = new Date();
+      const diferenciaMs = ahora - fechaInicio;
+
+      const segundos = Math.floor(diferenciaMs / 1000) % 60;
+      const minutos  = Math.floor(diferenciaMs / (1000 * 60)) % 60;
+      const horas    = Math.floor(diferenciaMs / (1000 * 60 * 60)) % 24;
+      let diasTotales = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
+      const años = Math.floor(diasTotales / 365);
+      diasTotales %= 365;
+      const meses = Math.floor(diasTotales / 30);
+      const dias = diasTotales % 30;
+
+      document.getElementById("contador").innerHTML =
+        `Llevamos ${años} años, ${meses} meses, ${dias} días,<br>${horas} horas, ${minutos} minutos y ${segundos} segundos juntos 💖`;
+    }
+    // Actualizamos el contador cada segundo
+    setInterval(actualizarContador, 1000);
+    actualizarContador();
+
+    // Función para crear un corazón (hoja) que caiga desde la copa
+    function crearCorazon() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      // Alterna entre dos iconos de corazón
+      heart.innerText = Math.random() > 0.5 ? "💖" : "❤️";
+      // Posición horizontal aleatoria dentro del rango de la copa (20% a 80%)
+      heart.style.left = (20 + Math.random() * 60) + "%";
+      // Ubicación vertical inicial (desde la parte baja de la copa)
+      heart.style.top = "120px";
+      // Duración y retraso aleatorios para la animación (4 a 8 segundos y 0 a 2 segundos)
+      const duracion = 4 + Math.random() * 4;
+      const retraso = Math.random() * 2;
+      heart.style.animationDuration = duracion + "s";
+      heart.style.animationDelay = retraso + "s";
+      // Tamaño aleatorio para el corazón (entre 20px y 36px)
+      heart.style.fontSize = (20 + Math.random() * 16) + "px";
+
+      document.getElementById("hearts").appendChild(heart);
+      // Removemos el corazón del DOM cuando finaliza la animación
+      setTimeout(() => { heart.remove(); }, (duracion + retraso) * 1000);
+    }
+    // Se crea un nuevo corazón cada 800 ms
+    setInterval(crearCorazon, 800);
+  </script>
+</body>
+</html>
+
